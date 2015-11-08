@@ -1,16 +1,40 @@
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
 
 public class Launcher {
 	public static void main(String[] args) {
 		TextParser parser = new TextParser("C:\\Program Files (x86)\\WordNet\\2.1\\dict");
-		
-		parser.open();
-		
 		String fileName = "C:\\Users\\BrentandTorya\\workspace\\ParadigmParser\\test.txt";
-		parser.readInFile(fileName);
 		
-		parser.tagText();
-		parser.parseText();
+		try {
+			parser.open();
+		}
+		catch (IOException e) {
+			System.err.println(e.toString());
+		}
+		
+		try {
+			parser.readInFile(fileName);
+		}
+		catch (FileNotFoundException e) {
+			System.err.println(e.toString());
+		}
+		
+		try {
+			parser.tagText();
+		}
+		catch (NoSuchElementException e) {
+			System.err.println(e.toString());
+		}
+		
+		try {
+			parser.parseText();
+		}
+		catch (NoSuchElementException | IOException e) {
+			System.err.println(e.toString());
+		}
 		
 		parser.close();
 		

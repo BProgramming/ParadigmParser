@@ -5,12 +5,12 @@ import java.util.Scanner;
 public class FileManager {
 	private Scanner in;
 	
-	public FileManager(String fileName) {
+	public FileManager(String fileName) throws FileNotFoundException {
 		try {
 			in = new Scanner(new File(fileName));
 		}
 		catch (FileNotFoundException e) {
-			System.err.println(e.toString());
+			throw new FileNotFoundException("Error: unable to read in the text file.");
 		}
 	}
 	
@@ -21,22 +21,6 @@ public class FileManager {
 	public String nextLine() {
 		if (in.hasNextLine()) {
 			return in.nextLine();
-		}
-		return null;
-	}
-	
-	public String nextWord() {
-		if (in.hasNext()) {
-			String rawText = in.next();
-			String cleanText = "";
-			for (int i = 0; i < rawText.length(); i++) {
-				char c = rawText.toUpperCase().charAt(i);
-				if ((c >= 'A' && c <= 'Z') || (c >= '0' && c<= '9') || c == '\'') {
-					cleanText += c;
-				}
-			}
-			
-			return cleanText;
 		}
 		return null;
 	}
