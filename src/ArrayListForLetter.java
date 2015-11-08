@@ -55,18 +55,35 @@ public class ArrayListForLetter {
 			int count2 = 0;
 			
 			while (count1 < words1.size() && count2 < words2.size()) {
-				//change this to compare the chain of hypernyms
-				if (words1.get(count1).word().compareTo(words2.get(count2).word()) <= 0) {
-					newWords0.add(words1.get(count1));
-					newWords0.add(words2.get(count2));
-				}
-				else {
-					newWords0.add(words2.get(count2));
-					newWords0.add(words1.get(count1));
+				boolean sorted = false;
+				for (int i = 0; !sorted && i < (int) Math.min(words1.get(count1).hypernyms().size(), words2.get(count2).hypernyms().size()); i++) {
+					String hypernym1 = words1.get(count1).hypernyms().get(words1.get(count1).hypernyms().size() - (i + 1));
+					String hypernym2 = words2.get(count2).hypernyms().get(words2.get(count2).hypernyms().size() - (i + 1));
+					
+					int comparisonResult = hypernym1.compareTo(hypernym2);
+					
+					if (comparisonResult < 0) {
+						newWords0.add(words1.get(count1));
+						count1++;
+						sorted = true;
+					}
+					else if (comparisonResult > 0) {
+						newWords0.add(words2.get(count2));
+						count2++;
+						sorted = true;
+					}
 				}
 				
-				count1++;
-				count2++;
+				if (!sorted) {
+					if (words1.get(count1).root().compareTo(words2.get(count2).root()) <= 0) {
+						newWords0.add(words1.get(count1));
+						count1++;
+					}
+					else {
+						newWords0.add(words2.get(count2));
+						count2++;
+					}
+				}
 			}
 			
 			if (count1 < words1.size()) {
@@ -77,7 +94,7 @@ public class ArrayListForLetter {
 			
 			if (count2 < words2.size()) {
 				for (int i = count2; i < words2.size(); i++) {
-					newWords0.add(words1.get(i));
+					newWords0.add(words2.get(i));
 				}
 			}
 			

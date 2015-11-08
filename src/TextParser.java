@@ -142,8 +142,8 @@ public class TextParser {
 		if (foundTags.get(words.size() - 1)) {
 			word = new WordRef(baseWord.toString(), dict, stemmer, convertToWordnetPOS(tags.get(words.size() - 1)));
 			
-			if (word.root() != null) {
-				char c = word.word().toUpperCase().charAt(0);
+			if (word.hypernyms() != null && !word.hypernyms().isEmpty()) {
+				char c = word.hypernyms().get(word.hypernyms().size() - 1).toUpperCase().charAt(0);
 				if (c >= 'A' && c <= 'Z') {
 					arrays.get((int) (c - 'A')).words.add(word);
 				}

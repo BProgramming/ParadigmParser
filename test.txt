@@ -1,1 +1,11 @@
+Seb Prins,Queen's Park,Legislative Assistant,11,Hello. This is a test for the referential dictionary: financial statement!
+
+Erik Traikov,Computer Programmer,XE,7, Did that work? Let's try golden  delicious.
+
+Brent Pollard,CPI Analyst,StatsCan, 13, Well well. That is what success looks like. Also tax rate of 36%.
+
+Adam Prins,Engineer: II,Google,12,Can the code 'lead with lead' if  you catch my drift?
+
+Kirill Morozov,Computer Programmer,XE,12,Here is another; the guy that was heavy handed me the paper.
+Nav Bains,Unemployed,Unemployed,10,Last test. That is golden. Delicious tasting fish last night.
 the quantum physics big blue bear brown fox jumps over the lazy dog
