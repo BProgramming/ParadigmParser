@@ -5,6 +5,8 @@ import java.util.NoSuchElementException;
 
 public class Launcher {
 	public static void main(String[] args) {
+		System.out.println("Program started...");
+		
 		TextParser parser = new TextParser("C:\\Program Files (x86)\\WordNet\\2.1\\dict");
 		String fileName = "C:\\Users\\BrentandTorya\\workspace\\ParadigmParser\\test.txt";
 		
@@ -41,6 +43,8 @@ public class Launcher {
 		ArrayList<ArrayListForLetter> text = parser.getText();
 		
 		printText(text);
+		
+		System.out.println("Program completed.");
 	}
 	
 	public static void printText(ArrayList<ArrayListForLetter> text) {

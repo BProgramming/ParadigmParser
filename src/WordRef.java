@@ -19,16 +19,16 @@ public class WordRef {
 		_word = word;
 		
 		if (partOfSpeech == null) {
-			_root = ".";
+			_root = null;
 			_hypernyms = null;
-			_pos = ".";
+			_pos = null;
 		}
 		else {
 			List<String> stems = stemmer.findStems(word, partOfSpeech);
-			if (stems.isEmpty()) {
-				_root = ".";
+			if (stems.isEmpty() || dict.getIndexWord(stems.get(0), partOfSpeech) == null) {
+				_root = null;
 				_hypernyms = null;
-				_pos = ".";
+				_pos = null;
 			}
 			else {
 				IWord dictWord = dict.getWord(dict.getIndexWord(stems.get(0), partOfSpeech).getWordIDs().get(0));

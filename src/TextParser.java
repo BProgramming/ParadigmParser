@@ -83,53 +83,22 @@ public class TextParser {
 			for (int i = 0; i < taggedText.size(); i++) {
 				Scanner parse = new Scanner(taggedText.get(i));
 				
-//				ArrayList<String> wordsInText = new ArrayList<String>();
-//				while (parse.hasNext()) {
-//					wordsInText.add(parse.next());
-//				}
-				
-//				parse.close();
-				
-				//triplet
-//				for (int j = 0; j < wordsInText.size() - 2; j++) {
-//					ArrayList<String> triplet = new ArrayList<String>();
-//					triplet.add(wordsInText.get(j));
-//					triplet.add(wordsInText.get(j + 1));
-//					triplet.add(wordsInText.get(j + 2));
-//				}
-
-				
-				while(parse.hasNext()) {
-					String wordWithTag = parse.next();
-					
-					String posTag = null;
-					boolean foundTag = false;
-					for (int j = 0; !foundTag && j < wordWithTag.length(); j++) {
-						String searchString = wordWithTag.substring(wordWithTag.length() - (j + 1), wordWithTag.length());
-						if (searchString.charAt(0) == '_') {
-							posTag = searchString;
-							foundTag = true;
-						}
-					}
-					
-					WordRef word;
-					
-					if (!foundTag) {
-						word = new WordRef(wordWithTag, null, null, null);
-					}
-					else {
-						word = new WordRef(wordWithTag.substring(0, wordWithTag.length() - posTag.length()), dict, stemmer, convertToWordnetPOS(posTag));
-						char c = word.word().toUpperCase().charAt(0);
-						if (c >= 'A' && c <= 'Z') {
-							arrays.get((int) (c - 'A')).words.add(word);
-						}
-						else if (c == '.') {
-							arrays.get(26).words.add(word);
-						}
-					}
+				ArrayList<String> wordsInText = new ArrayList<String>();
+				while (parse.hasNext()) {
+					wordsInText.add(parse.next());
 				}
 				
 				parse.close();
+				
+				for (int j = wordsInText.size(); j > 0; j--) {
+					for (int k = 0; k < wordsInText.size() - (j - 1); k++) {
+						ArrayList<String> groupedWords = new ArrayList<String>();
+						for (int l = 0; l < j; l++) {
+							groupedWords.add(wordsInText.get(k + l));
+						}
+						genWordRef(groupedWords);
+					}
+				}
 			}
 		}
 	}
@@ -146,10 +115,8 @@ public class TextParser {
 			for (int j = 0; !foundTags.get(i) && j < words.get(i).length(); j++) {
 				String searchString = words.get(i).substring(words.get(i).length() - (j + 1), words.get(i).length());
 				if (searchString.charAt(0) == '_') {
-					tags.add(i, searchString);
-					tags.remove(i + 1);
-					foundTags.add(i, true);
-					foundTags.remove(i + 1);
+					tags.set(i, searchString);
+					foundTags.set(i, true);
 				}
 			}
 			
@@ -163,21 +130,30 @@ public class TextParser {
 		
 		StringBuilder baseWord = new StringBuilder();
 		
-		for (int i = 0; i < words.size(); i++) {
+		for (int i = 0; i < wordsWithoutTags.size(); i++) {
 			if (i > 0) {
 				baseWord.append(' ');
 			}
-			baseWord.append(words.get(i));
+			baseWord.append(wordsWithoutTags.get(i));
 		}
 		
-		WordRef word = new WordRef(baseWord.toString(), dict, stemmer, convertToWordnetPOS(tags.get(words.size() - 1)));
+		WordRef word;
 		
-		char c = word.word().toUpperCase().charAt(0);
-		if (c >= 'A' && c <= 'Z') {
-			arrays.get((int) (c - 'A')).words.add(word);
+		if (foundTags.get(words.size() - 1)) {
+			word = new WordRef(baseWord.toString(), dict, stemmer, convertToWordnetPOS(tags.get(words.size() - 1)));
+			
+			if (word.root() != null) {
+				char c = word.word().toUpperCase().charAt(0);
+				if (c >= 'A' && c <= 'Z') {
+					arrays.get((int) (c - 'A')).words.add(word);
+				}
+				else if (c == '.') {
+					arrays.get(26).words.add(word);
+				}
+			}
 		}
-		else if (c == '.') {
-			arrays.get(26).words.add(word);
+		else {
+			word = new WordRef(baseWord.toString(), null, null, null);
 		}
 	}
 	
@@ -200,6 +176,9 @@ public class TextParser {
 	}
 	
 	public ArrayList<ArrayListForLetter> getText() {
+		for (int i = 0; i < arrays.size(); i++) {
+			arrays.get(i).sortWords();
+		}
 		return arrays;
 	}
 }
